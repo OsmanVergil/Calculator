@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            calculator
+        </title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="calculator">
+            <div id="result-window">
+                12123123
+            </div>
+            <div class="buttons">
+              <div class="button-column">
+                <button onclick="reset()">
+                  C
+                </button>
+                <button onclick="addDigit(7)"> 
+                  7
+                </button>
+                <button onclick="addDigit(4)">
+                  4
+                </button>
+                <button onclick="addDigit(1)">
+                  1
+                </button>
+                <button onclick="changeSign()">
+                  +/-
+                </button>
+              </div>
+
+              <div class="button-column">
+                <button onclick="sqrt()">
+                  sqrt
+                </button>
+                <button onclick="addDigit(8)">
+                  8
+                </button>
+                <button onclick="addDigit(5)">
+                  5
+                </button>
+                <button onclick="addDigit(2)">
+                  2
+                </button>
+                <button onclick="addDigit(0)">
+                  0
+                </button>
+              </div>
+
+              <div class="button-column">
+                <button onclick="sqr()">
+                  sqr
+                </button>
+                <button onclick="addDigit(9)">
+                  9
+                </button>
+                <button onclick="addDigit(6)">
+                  6
+                </button>
+                <button onclick="addDigit(3)">
+                  3
+                </button>
+                <button onclick="point()">
+                  .
+                </button>
+              </div>
+
+              <div class="button-column">
+                <button onclick="mul()">
+                  *
+                </button>
+                <button onclick="div()">
+                  /
+                </button>
+                <button onclick="sub()">
+                  -
+                </button>
+                <button onclick="sum()">
+                  +
+                </button>
+                <button onclick="commit()">
+                  =
+                </button>
+              </div>
+
+            </div>
+        </div>
+
+        <script>      
+          let currentNum = document.getElementById('result-window');
+          const operation = {
+            commiting: false,
+            type: undefined
+          }
+
+          let secNum = 0;
+          
+          function reset() {
+            currentNum.value = 0
+            currentNum.innerText = 0;
+          }
+
+          reset();
+
+          function trunc() {
+            if (currentNum.innerText.length >= 14) {
+              currentNum.innerText = currentNum.innerText.slice(0, 13);
+              if (!operation.commiting) {
+              currentNum.value = +currentNum.innerText;
+              } else { 
+              secNum = +currentNum.innerText;
+            }
+            }
+          }
+
+          function addDigit(digit) {
+            if (currentNum.innerText === '0') currentNum.innerText = '';
+
+            currentNum.innerText += digit;
+            if (!operation.commiting) currentNum.value = +currentNum.innerText;
+            else secNum = +currentNum.innerText;
+            
+            trunc();
+            console.log(currentNum.value);
+          }
+
+          function sum() {
+            commit();
+
+            operation.commiting = true;
+            operation.type = 'sum';
+          }
+
+          function sub() {
+            commit();
+
+            operation.commiting = true;
+            operation.type = 'sub';
+          }
+
+          function mul() {
+            commit();
+
+            operation.commiting = true;
+            operation.type = 'mul';
+          }
+
+          function div() {
+            commit();
+
+            operation.commiting = true;
+            operation.type = 'div';
+          }
+
+          function sqr() {
+            if (!operation.commiting) {
+              console.log(currentNum.value);
+              currentNum.value = Math.pow(currentNum.value, 2);
+              console.log(currentNum.value);
+              currentNum.innerText = currentNum.value;
+            } else { 
+              secNum = Math.pow(secNum, 2);
+              console.log(secNum);
+              currentNum.innerText = secNum;
+            }
+            trunc();
+          }
+
+          function sqrt() {
+            if (!operation.commiting) {
+              currentNum.value = Math.sqrt(currentNum.value);
+              currentNum.innerText = currentNum.value;
+            } else { 
+              secNum = Math.sqrt(secNum);
+              currentNum.innerText = secNum;
+            }
+            trunc();
+          }
+
+          function changeSign() {
+            if (!operation.commiting) {
+              currentNum.value *= -1;
+              currentNum.innerText = currentNum.value;
+            } else { 
+              secNum *= -1;
+              currentNum.innerText = secNum;
+            }
+          }
+
+          function point() {
+            const text = currentNum.innerText;
+            if (text.includes('.')) currentNum.innerText = text.slice(0, text.length);
+            else currentNum.innerText += '.'; 
+          }
+
+          function commit() {
+            if (operation.commiting) {
+              switch (operation.type) {
+                case 'sum':
+                  currentNum.value += secNum;
+                  currentNum.innerText = currentNum.value;
+                  break;
+                case 'sub':
+                  currentNum.value -= secNum;
+                  currentNum.innerText = currentNum.value;
+                  break;
+                case 'mul':
+                  currentNum.value *= secNum;
+                  currentNum.innerText = currentNum.value;
+                  break;
+                case 'div':
+                currentNum.value /= secNum;
+                  currentNum.innerText = currentNum.value;
+                  break;
+              }
+
+              secNum = 0;
+              operation.commiting = false;
+            }
+          }
+        </script>
+    </body>
+</html>
